@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.testing.ApplicationTestConfiguration;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,5 +36,17 @@ class ApplicationTest {
     void cacheConfigurationIsWorking() {
         assertThat(environment.containsProperty("spring.cache.redis.docker-image")).isTrue();
         assertThat(applicationContext.getBeansOfType(RedisTemplate.class)).isNotEmpty();
+    }
+
+    @Test
+    void databaseMigrationIsWorking() {
+        assertThat(applicationContext.getBeansOfType(Flyway.class)).isNotEmpty();
+
+        final var flyway = applicationContext.getBean(Flyway.class);
+        final var migrationInfo = flyway.info();
+
+        assertThat(migrationInfo.all()).hasSize(1);
+        assertThat(migrationInfo.applied()).hasSize(1);
+        assertThat(migrationInfo.pending()).isEmpty();
     }
 }
