@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -28,5 +29,11 @@ class ApplicationTest {
         assertThat(environment.containsProperty("spring.datasource.docker-image")).isTrue();
         assertThat(applicationContext.getBeansOfType(DataSource.class)).isNotEmpty();
         assertThat(applicationContext.getBeansOfType(JdbcTemplate.class)).isNotEmpty();
+    }
+
+    @Test
+    void cacheConfigurationIsWorking() {
+        assertThat(environment.containsProperty("spring.cache.redis.docker-image")).isTrue();
+        assertThat(applicationContext.getBeansOfType(RedisTemplate.class)).isNotEmpty();
     }
 }
