@@ -7,3 +7,9 @@ services:
       - 'POSTGRES_PASSWORD=password'
     ports:
       - '5432'
+  redis:
+    image: 'redis:latest'
+    environment:
+      - 'REDIS_PASSWORD=password'
+    ports:
+      - '6379'
